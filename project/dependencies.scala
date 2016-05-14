@@ -41,6 +41,8 @@ object Dependencies {
     "org.twitter4j" % "twitter4j-stream" % twitter4jVersion,
     "org.twitter4j" % "twitter4j-core" % twitter4jVersion,
     "com.twitter" % "hbc-core" % "2.2.0",
+    "joda-time" % "joda-time" % "2.9.3",
+    "com.github.pathikrit" %% "better-files" % "2.16.0",
     ("org.apache.commons" % "commons-lang3" % "3.4").exclude("commons-logging", "commons-logging")
   ) ++ testDeps
 
