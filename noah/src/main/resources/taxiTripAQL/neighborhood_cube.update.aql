@@ -1,0 +1,33 @@
+use dataverse tripdata
+
+insert into dataset cube_pickup(
+for $r in dataset tripdata
+where not(is-null($r.pickup_geo_tag))
+group by $nid := $r.pickup_geo_tag.neighborID,
+	$timebin := interval-bin($r.pickup_datetime, datetime("2015-01-01T00:00:00.000"), day-time-duration("PT4H")) with $r
+let $bid := (for $i in $r return $i.pickup_geo_tag.boroCode)[0]
+let $s := sum(for $i in $r return $i.passenger_count)
+let $dis := sum(for $i in $r return $i.trip_distance)
+let $fare := sum(for $i in $r return $i.fare_amount)
+let $tip := sum(for $i in $r return $i.tip_amount)
+let $total := sum(for $i in $r return $i.total_amount)
+let $tc := count($r)
+return {"nid": $nid,  "boro_id": $bid, "start_time": get-interval-start-datetime($timebin), "psg_count": $s, "trip_distance": $dis, "fare_amount": $fare, "tip_amount": $tip, "total_amount": $total, "trip_count": $tc}
+)
+
+use dataverse tripdata
+
+insert into dataset cube_dropoff(
+for $r in dataset tripdata
+where not(is-null($r.dropoff_geo_tag))
+group by $nid := $r.dropoff_geo_tag.neighborID,
+	$timebin := interval-bin($r.dropoff_datetime, datetime("2015-01-01T00:00:00.000"), day-time-duration("PT4H")) with $r
+let $bid := (for $i in $r return $i.dropoff_geo_tag.boroCode)[0]
+let $s := sum(for $i in $r return $i.passenger_count)
+let $dis := sum(for $i in $r return $i.trip_distance)
+let $fare := sum(for $i in $r return $i.fare_amount)
+let $tip := sum(for $i in $r return $i.tip_amount)
+let $total := sum(for $i in $r return $i.total_amount)
+let $tc := count($r)
+return {"nid": $nid,  "boro_id": $bid, "start_time": get-interval-start-datetime($timebin), "psg_count": $s, "trip_distance": $dis, "fare_amount": $fare, "tip_amount": $tip, "total_amount": $total, "trip_count": $tc}
+)

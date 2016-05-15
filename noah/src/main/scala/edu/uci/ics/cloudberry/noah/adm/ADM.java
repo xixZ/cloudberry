@@ -30,6 +30,8 @@ public class ADM {
         return mkADMConstructor("int32", value);
     }
     public static String mkFloatConstructor(String value) {
+        if (value.length() == 0)
+            return "null";
         return mkADMConstructor("float", (Float.toString(Float.parseFloat(value))) + "f");
     }
     public static String mkDateConstructor(Date jdate) {

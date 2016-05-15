@@ -1,0 +1,21 @@
+use dataverse hackathon;
+
+insert into dataset sig_app(
+for $t in dataset signal
+for $r in dataset app
+where $t.device_id = $r.device_id
+return{
+"time": $t.time,
+"location": $t.location,
+"geo_tag": $t.geo_tag,
+"device_id": $t.device_id,
+"app_id": $t.app_id,
+"app_version_type": $r.app_version_type,
+"package_name": $r.package_name,
+"app_name": $r.app_name,
+"version": $r.version,
+"app_usage_type": $r.app_usage_type,
+"icon": $r.icon?,
+"category": $r.category
+}
+)

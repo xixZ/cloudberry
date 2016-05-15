@@ -17,7 +17,7 @@ package object gnosis {
 
   val OrderedLevels: Seq[TypeLevel] = Seq(StateLevel, CountyLevel, CityLevel)
 
-  var NYLevels: Seq[TypeLevel] = Seq(BoroLevel, NeighborLevel)
+  var NYLevels: Seq[TypeLevel] = Seq(NeighborLevel)
 
   def loadSmallJSONFile(file: File): String = {
     val decoder = Charset.forName("UTF-8").newDecoder()

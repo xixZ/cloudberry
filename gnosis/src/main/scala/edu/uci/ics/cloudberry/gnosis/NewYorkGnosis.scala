@@ -12,6 +12,7 @@ class NewYorkGnosis(levelGeoPathMap: Map[TypeLevel, File]) extends IGnosis{
   val levelShapeMap = load(levelGeoPathMap)
 
   override def load(shapeMap: Map[TypeLevel, File]): Map[TypeLevel, NYGeoJSONIndex] = {
+    System.out.println("load NYGnosis")
     NYLevels.map(level => {
       val index = new NYGeoJSONIndex()
       loadShape(shapeMap.get(level).get, index)(INYGeoJSONEntity.apply)
@@ -35,8 +36,7 @@ class NewYorkGnosis(levelGeoPathMap: Map[TypeLevel, File]) extends IGnosis{
 
 object NewYorkGnosis {
 
-  case class NYGeoTagInfo(neighborID: Int, neighborName: String,
-                          boroCode: Int, boroName: String) extends IGeoTagInfo{
+  case class NYGeoTagInfo(neighborID: Int, boroCode: Int) extends IGeoTagInfo{
     override def toString: String = Json.toJson(this).asInstanceOf[JsObject].toString()
   }
 
@@ -45,8 +45,7 @@ object NewYorkGnosis {
 
     def apply(entity: NYNeighborEntity): NYGeoTagInfo = {
       entity match {
-        case neighbor: NYNeighborEntity => NYGeoTagInfo(boroCode = neighbor.boroCode, boroName = neighbor.boroName,
-          neighborID = neighbor.neighborID, neighborName = neighbor.neighborName)
+        case neighbor: NYNeighborEntity => NYGeoTagInfo(neighborID = neighbor.neighborID, boroCode = neighbor.boroCode)
       }
     }
   }
@@ -59,6 +58,7 @@ object NewYorkGnosis {
         loadShape(file, index)(builder)
       }
     } else {
+      System.out.println("@@@@@@@@@@@@@")
       val textJson = loadSmallJSONFile(file)
       index.loadShape(textJson)(builder)
     }

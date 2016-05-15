@@ -1,0 +1,31 @@
+use dataverse hackathon
+insert into dataset sigcube(
+for $r in dataset signal
+where not(is-null($r.geo_tag))
+group by
+    $bid := $r.geo_tag.boroCode,
+    $nid := $r.geo_tag.neighborID,
+	$timebin := interval-bin($r.time, datetime("2015-01-01T00:00:00.000"), day-time-duration("PT1H")) with $r
+let $cdma_dbm := sum(for $i in $r where not(is-null($i.cdma_dbm)) return $i.cdma_dbm)
+let $cdma_asu_level := sum(for $i in $r where not(is-null($i.cdma_asu_level)) return $i.cdma_asu_level)
+let $c1 := count(for $i in $r where not(is-null($i.cdma_dbm)) return $i)
+let $evdo_dbm := sum(for $i in $r where not(is-null($i.evdo_dbm)) return $i.evdo_dbm)
+let $evdo_asu_level := sum(for $i in $r where not(is-null($i.evdo_asu_level)) return $i.evdo_asu_level)
+let $c2 := count(for $i in $r where not(is-null($i.evdo_dbm)) return $i)
+
+let $gsm_dbm := sum(for $i in $r where not(is-null($i.gsm_dbm)) return $i.gsm_dbm)
+let $gsm_asu_level := sum(for $i in $r where not(is-null($i.gsm_asu_level)) return $i.gsm_asu_level)
+let $c3 := count(for $i in $r where not(is-null($i.gsm_dbm)) return $i)
+
+let $lte_dbm := sum(for $i in $r where not(is-null($i.lte_dbm)) return $i.lte_dbm)
+let $lte_asu_level := sum(for $i in $r where not(is-null($i.lte_asu_level)) return $i.lte_asu_level)
+let $c4 := count(for $i in $r where not(is-null($i.lte_dbm)) return $i)
+let $wcdma_dbm := sum(for $i in $r where not(is-null($i.wcdma_dbm)) return $i.wcdma_dbm)
+let $wcdma_asu_level := sum(for $i in $r where not(is-null($i.wcdma_asu_level)) return $i.wcdma_asu_level)
+let $c5 := count(for $i in $r where not(is-null($i.wcdma_dbm)) return $i.wcdma_dbm)
+
+return {"nid": $nid,  "boro_id": $bid, "start_time": get-interval-start-datetime($timebin),
+"cdma_dbm": $cdma_dbm, "cdma_asu_level": $cdma_asu_level, "cdma_count": $c1, "evdo_dbm": $evdo_dbm, "evdo_asu_level": $evdo_asu_level,
+"evdo_count": $c2, "gsm_dbm": $gsm_dbm, "gsm_asu_level": $gsm_asu_level, "gsm_count": $c3, "lte_dbm": $lte_dbm, "lte_asu_level": $lte_asu_level,
+"lte_count": $c4, "wcdma_dbm": $wcdma_dbm, "wcdma_asu_level": $wcdma_asu_level, "wcdma_count": $c5}
+)

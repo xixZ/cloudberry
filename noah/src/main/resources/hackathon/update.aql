@@ -1,0 +1,21 @@
+use dataverse hackathon;
+load dataset signal
+using localfs
+(("path"="172.17.0.3:///xiz/hackathon/signal.adm"), ("format"="adm"));
+
+
+use dataverse hackathon;
+load dataset devices
+using localfs
+(("path"="172.17.0.3:///xiz/hackathon/devices.adm"), ("format"="adm"));
+
+use dataverse hackathon;
+load dataset battery
+using localfs
+(("path"="172.17.0.3:///xiz/hackathon/battery.adm"), ("format"="adm"));
+
+
+use dataverse hackathon;
+load dataset logdata
+using localfs
+(("path"="172.17.0.3:///xiz/hackathon/log_data.adm"), ("format"="adm"));
