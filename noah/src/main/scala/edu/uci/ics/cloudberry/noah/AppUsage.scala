@@ -47,6 +47,10 @@ object AppUsage extends App {
       ADM.keyValueToSbWithComma(builder, StartDate.name, ADM.mkDateTimeConstructor(formatter.parse(parts(StartDate.idx))))
 
       val runTime = parts(RunTime.idx).toLong + 1
+      if (runTime  <= 0 ) {
+        throw new IllegalArgumentException
+      }
+
       ADM.keyValueToSbWithComma(builder, RunTime.name, ADM.mkInt64Constructor(runTime))
 
       val dateStart = formatter.parse(parts(StartDate.idx))
