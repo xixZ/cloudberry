@@ -4,9 +4,11 @@ import edu.uci.ics.cloudberry.zion.model._
 import org.joda.time.{DateTime, Duration, Interval, Weeks}
 import play.api.libs.json.{JsArray, JsObject, Json}
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 trait TestData {
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   val startTime1 = new DateTime(2012, 1, 1, 0, 0)
   val interval1 = new Interval(startTime1, Weeks.weeks(1))
 
@@ -37,14 +39,14 @@ trait TestData {
   val dayResult = Seq[KeyCountPair](KeyCountPair("2012-01-01", 1), KeyCountPair("2012-01-02", 2))
   val hashTagResult = Seq[KeyCountPair](KeyCountPair("youShallPass", 100))
   val byStateByDayResult = SpatialTimeCount(stateResult, dayResult, hashTagResult)
-  val byStateByDayResponse = JsArray(Seq(Json.toJson(byStateByDayResult)))
+  val byStateByDayResponse = JsArray(Seq(stateResult, dayResult, hashTagResult).map(Json.toJson(_)))
 
   // Create by county, by month request
   val CountyMonthSummary = SummaryLevel(SpatialLevels.County, TimeLevels.Month)
   val byCountyMonthQuery = DBQuery(CountyMonthSummary, Seq(timePredicate1, idPredicate))
   val monthResult = Seq[KeyCountPair](KeyCountPair("2012-01", 1), KeyCountPair("2012--02", 2))
   val byCountyMonthResult = SpatialTimeCount(stateResult, monthResult, hashTagResult)
-  val byCountyMonthResponse = JsArray(Seq(Json.toJson(byCountyMonthResult)))
+  val byCountyMonthResponse = JsArray(Seq(stateResult, monthResult, hashTagResult).map(Json.toJson(_)))
 
   // Create a partially intersected time range db query
   val partialTime = TimePredicate(FieldCreateAt, Seq(new Interval(startTime1, new DateTime())))
@@ -52,4 +54,7 @@ trait TestData {
 
   // Create a finner summary level db query
   val finerQuery = DBQuery(SummaryLevel(SpatialLevels.City, TimeLevels.Second), Seq(timePredicate1))
+
+  // Create a keyword query
+  val keywordQuery = DBQuery(StateDaySummary, Seq(keywordPredicate1, timePredicate1, idPredicate))
 }

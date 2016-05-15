@@ -47,9 +47,6 @@
 
         function(newResult) {
           $scope.result = newResult;
-          if (Object.keys($scope.result).length != 0) {
-            $scope.status.init = false;
-          }
         }
       );
     });
@@ -79,6 +76,20 @@
         }
       );
     });
+
+    app.controller('ExceptionCtrl', function($scope, $window, Asterix) {
+      $scope.$watch(
+        function() {
+          return Asterix.errorMessage;
+        },
+
+        function(newMsg) {
+          if (newMsg)
+            $window.alert(newMsg);
+          Asterix.errorMessage = null;
+        }
+      );
+    });
   </script>
 </head>
 
@@ -89,7 +100,7 @@
         <div class="control-group">
           <label class="control-label">Keywords</label>
           <div class="controls">
-            <input type="text" ng-model="keyword" required/>
+            <input type="text" ng-model="keyword"/>
           </div>
         </div>
         <div class="control-group">
@@ -157,8 +168,8 @@
       </ul>
     </div>
 
-    <div ng-controller="ExceptionCtrl">
-    </div>
+    <!--<div ng-controller="ExceptionCtrl">-->
+    <!--</div>-->
 
   </div>
 </body>

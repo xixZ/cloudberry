@@ -1,6 +1,6 @@
 package edu.uci.ics.cloudberry.noah.adm;
 
-import edu.uci.ics.cloudberry.gnosis.Rectangle;
+import edu.uci.ics.cloudberry.util.Rectangle;
 import org.apache.commons.lang3.StringEscapeUtils;
 import twitter4j.GeoLocation;
 import twitter4j.HashtagEntity;
@@ -23,17 +23,21 @@ public class ADM {
     public static String mkInt64Constructor(long value) {
         return mkADMConstructor("int64", String.valueOf(value));
     }
+
     public static String mkInt8Constructor(String value) {
         return mkADMConstructor("int8", value);
     }
+
     public static String mkInt32Constructor(String value) {
         return mkADMConstructor("int32", value);
     }
+
     public static String mkFloatConstructor(String value) {
         if (value.length() == 0)
             return "null";
         return mkADMConstructor("float", (Float.toString(Float.parseFloat(value))) + "f");
     }
+
     public static String mkDateConstructor(Date jdate) {
         return "date(\"" + ADMDateFormat.format(jdate) + "\")";
     }
@@ -42,7 +46,11 @@ public class ADM {
         return "datetime(\"" + ADMDateFormat.format(jdate) + "T" + ADMTimeFormat.format(jdate) + "\")";
     }
 
-    public static Rectangle coordinates2Rectangle(GeoLocation[][] boundingBoxCoordinates){
+    public static String mkIntervalConstructor(Date jStart, Date jEnd) {
+        return "interval(" + mkDateTimeConstructor(jStart) + " , " + mkDateTimeConstructor(jEnd) + ")";
+    }
+
+    public static Rectangle coordinates2Rectangle(GeoLocation[][] boundingBoxCoordinates) {
         if (boundingBoxCoordinates.length != 1 || boundingBoxCoordinates[0].length != 4) {
             throw new IllegalArgumentException("unknown boundingBoxCoordinates");
         }
@@ -66,7 +74,7 @@ public class ADM {
                 boundingBoxCoordinates[0][3].getLatitude()));
 
         // AsterixDB is unhappy with this kind of point "rectangular"
-        if (swLog == neLog && swLat == neLat){
+        if (swLog == neLog && swLat == neLat) {
             swLog = neLog - 0.0000001;
             swLat = neLat - 0.0000001;
         }
@@ -107,6 +115,7 @@ public class ADM {
     public static String mkPoint(String lng, String lat) {
         return "point(\"" + lng + "," + lat + "\")";
     }
+
     public static String mkStringSet(HashtagEntity[] hashtagEntities) {
         StringBuilder sb = new StringBuilder();
         sb.append("{{");

@@ -32,7 +32,6 @@ class TwitterViewsManagerActorTest extends Specification with Mockito {
 
   "A TwitterViewsManagerActor" should {
     "load meta store after start " in {
-
       ok
     }
     "create a store if it is a new view " in {
@@ -41,7 +40,7 @@ class TwitterViewsManagerActorTest extends Specification with Mockito {
     "forward the query to children viewActor " in {
       ok
     }
-    "flush the meta store when stops " in {
+    "update the meta store when reviece the request" in {
       ok
     }
   }
@@ -63,7 +62,7 @@ class TwitterViewsManagerActorTest extends Specification with Mockito {
           |  "sourceName" : "twitter",
           |  "viewKey" : "twitter_",
           |  "summaryLevel" : {
-          |    "spatialLevel" : 2,
+          |    "spatialLevel" : 1,
           |    "timeLevel" : 3
           |  },
           |  "startTime" : "1969-12-31T16:00:00.000Z",
@@ -75,7 +74,7 @@ class TwitterViewsManagerActorTest extends Specification with Mockito {
           |  "sourceName" : "twitter",
           |  "viewKey" : "twitter_trump",
           |  "summaryLevel" : {
-          |    "spatialLevel" : 2,
+          |    "spatialLevel" : 1,
           |    "timeLevel" : 3
           |  },
           |  "startTime" : "1969-12-31T16:00:00.000Z",
@@ -87,7 +86,7 @@ class TwitterViewsManagerActorTest extends Specification with Mockito {
           |  "sourceName" : "twitter",
           |  "viewKey" : "twitter_rain",
           |  "summaryLevel" : {
-          |    "spatialLevel" : 2,
+          |    "spatialLevel" : 1,
           |    "timeLevel" : 3
           |  },
           |  "startTime" : "1969-12-31T16:00:00.000Z",
