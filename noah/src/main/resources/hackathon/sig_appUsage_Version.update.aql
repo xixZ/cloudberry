@@ -1,21 +1,36 @@
 use dataverse hackathon;
-
 insert into dataset sig_app(
-for $t in dataset signal
-for $r in dataset app
-where $t.device_id = $r.device_id
+for $j in(
+for $r in dataset app_usage_version
+for $t in dataset sig_duration
+where $r.device_id = $t.device_id and
+get-interval-start-datetime($r.use_interval) >= $t.signal_start_time
 return{
-"time": $t.time,
+"app_start_time": get-interval-start-datetime($r.use_interval),
+"signal_start_time": $t.signal_start_time,
+"device_id": $t.device_id,
+"app_id": $r.app_id,
+"app_usage_type": $r.app_usage_type,
+"app_name": $r.app_name,
+"app_version_type": $r.app_version_type,
+"icon": $r.icon,
+"category": $r.category,
 "location": $t.location,
 "geo_tag": $t.geo_tag,
-"device_id": $t.device_id,
-"app_id": $t.app_id,
-"app_version_type": $r.app_version_type,
-"package_name": $r.package_name,
-"app_name": $r.app_name,
-"version": $r.version,
-"app_usage_type": $r.app_usage_type,
-"icon": $r.icon?,
-"category": $r.category
+"run_time": $r.run_time
+})
+group by $aid := $j.app_id, $did := $j.device_id, $app_start_time := $j.app_start_time with $j
+return{
+"app_start_time": $app_start_time,
+"app_id": $aid,
+"device_id": $did,
+"app_usage_type": (for $x in $j return $x.app_usage_type)[0],
+"app_name": (for $x in $j return $x.app_name)[0],
+"app_version_type": (for $x in $j return $x.app_version_type)[0],
+"icon": (for $x in $j return $x.icon)[0],
+"category": (for $x in $j return $x.category)[0],
+"location": (for $x in $j order by $x.signal_start_time desc limit 1 return $x.location)[0],
+"geo_tag": (for $x in $j order by $x.signal_start_time desc limit 1 return $x.geo_tag)[0],
+"run_time": (for $x in $j return $x.run_time)[0]
 }
 )
